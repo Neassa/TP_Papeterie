@@ -39,7 +39,7 @@ public class Ramette extends Article{
     }
 
     /**
-     * MAJ constructeur pour test AppliTestDAL
+     * MAJ constructeur pour test AppliTestDAL - SANS ID
      * @param marque
      * @param ref
      * @param designation
