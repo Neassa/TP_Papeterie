@@ -28,6 +28,20 @@ public class Stylo extends Article{
         this.couleur = couleur;
     }
 
+    /**
+     * MAJ constructeur pour test AppliTestDAL
+     * @param marque
+     * @param ref
+     * @param designation
+     * @param pu
+     * @param qte
+     * @param bleu
+     */
+    public Stylo(String marque, String ref, String designation, float pu, int qte, String bleu) {
+        super(null, marque, ref, designation, pu, qte);
+        this.couleur = couleur;
+    }
+
     @Override
     public String toString() {
         return  super.toString() + " Stylo [" +

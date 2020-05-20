@@ -38,6 +38,20 @@ public class Ramette extends Article{
         this.grammage = grammage;
     }
 
+    /**
+     * MAJ constructeur pour test AppliTestDAL
+     * @param marque
+     * @param ref
+     * @param designation
+     * @param pu
+     * @param qte
+     * @param grammage
+     */
+    public Ramette(String marque, String ref, String designation, float pu, int qte, int grammage) {
+        super(null, marque, ref, designation, pu, qte);
+        this.grammage = grammage;
+    }
+
     @Override
     public String toString() {
         return super.toString() + " Ramette [" +
