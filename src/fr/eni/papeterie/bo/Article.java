@@ -10,13 +10,13 @@ public abstract class Article {
 
 
     /**
-     * Constructeur
-     * @param idArticle
-     * @param marque
-     * @param ref
-     * @param designation
-     * @param pu
-     * @param qte
+     * Constructeur complet
+     * @param idArticle id de l'article
+     * @param marque la marque de l'article
+     * @param ref la référence de l'article
+     * @param designation la désignation de l'article
+     * @param pu le prix unitaire de l'article
+     * @param qte la quantité de l'articl en stock
      */
     public Article(Integer idArticle, String marque, String ref, String designation, float pu, int qte) {
         this.idArticle = idArticle;
@@ -28,10 +28,10 @@ public abstract class Article {
     }
 
     /**
-     * Constructeur
-     * @param marque
-     * @param pu
-     * @param qte
+     * Constructeur partiel
+     * @param marque la marque de l'article
+     * @param pu le prix unitaire de l'article
+     * @param qte la quantité de l'articl en stock
      */
     public Article(String marque, float pu, int qte) {
         this.marque = marque;
@@ -39,8 +39,22 @@ public abstract class Article {
         this.qteStock = qte;
     }
 
+    /**
+     * Constructeur vide par défaut
+     */
     public Article() {
+    }
 
+    @Override
+    public String toString() {
+        return "Article [" +
+                "idArticle=" + idArticle +
+                ", reference=" + reference +
+                ", marque=" + marque +
+                ", designation=" + designation+
+                ", prixUnitaire=" + prixUnitaire +
+                ", qteStock=" + qteStock +
+                ']';
     }
 
     //GETTERS & SETTERS
@@ -90,17 +104,5 @@ public abstract class Article {
 
     public void setQteStock(int qteStock) {
         this.qteStock = qteStock;
-    }
-
-    @Override
-    public String toString() {
-        return "Article [" +
-                "idArticle=" + idArticle +
-                ", reference=" + reference +
-                ", marque=" + marque +
-                ", designation=" + designation+
-                ", prixUnitaire=" + prixUnitaire +
-                ", qteStock=" + qteStock +
-                ']';
     }
 }

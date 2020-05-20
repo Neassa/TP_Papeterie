@@ -4,13 +4,13 @@ public class Stylo extends Article{
     private String couleur;
 
     /**
-     * Constructeur
-     * @param idArticle
-     * @param marque
-     * @param ref
-     * @param designation
-     * @param pu
-     * @param qte
+     * Constructeur complet avec héritage de la classe Article
+     * @param idArticle id de l'article
+     * @param marque la marque de l'article
+     * @param ref la référence de l'article
+     * @param designation la désignation de l'article
+     * @param pu le prix unitaire de l'article
+     * @param qte la quantité de l'article en stock
      */
     public Stylo(Integer idArticle, String marque, String ref, String designation, float pu, int qte, String couleur) {
         super(idArticle, marque, ref, designation, pu, qte);
@@ -18,10 +18,10 @@ public class Stylo extends Article{
     }
 
     /**
-     * Constructeur
-     * @param marque
-     * @param pu
-     * @param qte
+     * Constructeur partiel avec héritage de la classe Article
+     * @param marque la marque de l'article
+     * @param pu le prix unitaire de l'article
+     * @param qte la quantité de l'article en stock
      */
     public Stylo(String marque, float pu, int qte, String couleur) {
         super(marque, pu, qte);
@@ -35,6 +35,7 @@ public class Stylo extends Article{
                 ']';
     }
 
+    // GETTERS & SETTERS
     public String getCouleur() {
         return couleur;
     }

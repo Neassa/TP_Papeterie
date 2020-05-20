@@ -4,11 +4,25 @@ public class Ligne {
     protected int qte;
     private Article article;
 
+    /**
+     * Constructeur de la classe Ligne
+     * @param article l'article référencé dans la ligne
+     * @param qte la quantité sélectionnée
+     */
     public Ligne(Article article, int qte) {
         this.qte = qte;
         this.article = article;
     }
 
+    @Override
+    public String toString() {
+        return "Ligne [" +
+                "qte=" + qte +
+                ", article=" + article +
+                ']';
+    }
+
+    //GETTERS & SETTERS
     public int getQte() {
         return qte;
     }
@@ -29,11 +43,4 @@ public class Ligne {
         this.article = article;
     }
 
-    @Override
-    public String toString() {
-        return "Ligne [" +
-                "qte=" + qte +
-                ", article=" + article +
-                ']';
-    }
 }
