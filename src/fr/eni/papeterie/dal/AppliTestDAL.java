@@ -3,8 +3,7 @@ package fr.eni.papeterie.dal;
 import fr.eni.papeterie.bo.Article;
 import fr.eni.papeterie.bo.Ramette;
 import fr.eni.papeterie.bo.Stylo;
-import fr.eni.papeterie.dal.DALException;
-import fr.eni.papeterie.dal.jdbc.ArticleDAOJdbcImpl;
+import fr.eni.papeterie.dal.jdbc.ArticleDAOJbdcImpl;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ public class AppliTestDAL {
 	public static void main(String[] args) {
 
 		//Déclaration et instanciation de la DAO
-		ArticleDAOJdbcImpl articleDAO = new ArticleDAOJdbcImpl();
+		ArticleDAOJbdcImpl articleDAO = new ArticleDAOJbdcImpl();
 
 		//Instanciation du jeu d'essai 
 		Article a1 = new Stylo( "Bic", "BBOrange","Bic bille Orange", 1.2f, 20, "bleu");
@@ -32,7 +31,7 @@ public class AppliTestDAL {
 			System.out.println("Article ajouté  : " + a3.toString() );
 
 
-			//Sélection de l'article par id
+		/*	//Sélection de l'article par id
 			Article a = articleDAO.selectById(a2.getIdArticle());
 			System.out.println("\nSélection de l'article par id  : " + a.toString() );
 
@@ -49,8 +48,8 @@ public class AppliTestDAL {
 			((Stylo) a1).setReference("BBNoir");
 			articleDAO.update(a1);
 			System.out.println("Article après modification  : " + a1.toString() );
-			
-			
+
+
 			//Suppression d'un article
 			System.out.println("\nSuppression de l'article  : " + a1.toString());
 			articleDAO.delete(a1.getIdArticle());
@@ -59,9 +58,11 @@ public class AppliTestDAL {
 			afficherArticles(articles);
 			System.out.println("---------------------------------------------------------------");
 
-			
+		 */
+
+
 		} catch (DALException e) {
-			e.printStackTrace();
+
 		}
 
 	}
