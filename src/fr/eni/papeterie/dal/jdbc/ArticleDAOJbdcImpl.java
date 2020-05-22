@@ -7,6 +7,7 @@ import fr.eni.papeterie.bo.Stylo;
 import fr.eni.papeterie.dal.DALException;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleDAOJbdcImpl {
@@ -14,8 +15,9 @@ public class ArticleDAOJbdcImpl {
     Connection conn;
     Statement stmt;
 
-    private static final String querySelectbyId = "SELECT idArticle, references , marque, designation, prixUnitaire, qteStock, grammage, couleur from Articles WHERE idArticle = ?";
+    private static final String querySelectbyId = "SELECT idArticle, reference , marque, designation, prixUnitaire, qteStock, grammage, couleur, type from Articles WHERE idArticle = ?";
     private static final String queryInsert = "INSERT INTO Articles (reference, marque, designation, prixUnitaire, qteStock, grammage, couleur, type) VALUES(?, ?, ?, ?, ?, ?, ?, ?) ";
+    private static final String querySelectAll = "SELECT * FROM Articles";
 
     public Connection getConnexion() {
         try {
@@ -26,21 +28,12 @@ public class ArticleDAOJbdcImpl {
         return conn;
     }
 
-  /*  private void close(Statement stmt, Connection conn){
-        if (conn!= null){
-            try {
-                conn.close();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            conn = null;
-    }*/
 
     public void insert(Article art) throws DALException {
         getConnexion();
 
         try {
-            PreparedStatement stmt = conn.prepareStatement(queryInsert);
+            PreparedStatement stmt = conn.prepareStatement(queryInsert, Statement.RETURN_GENERATED_KEYS);
             stmt.setObject(1, art.getReference(), Types.NCHAR);
             stmt.setObject(2, art.getMarque(), Types.VARCHAR);
             stmt.setObject(3, art.getDesignation(), Types.NVARCHAR);
@@ -58,6 +51,13 @@ public class ArticleDAOJbdcImpl {
                 stmt.setObject(8, art.getClass().getSimpleName(), Types.NCHAR);
             }
             stmt.executeUpdate();
+            //récupérer l'id de l'article
+           ResultSet rs = stmt.getGeneratedKeys();
+
+           if (rs.next()) {
+               art.setIdArticle(rs.getInt(1));
+           }
+
 
         } catch (SQLException throwables) {
             throw new DALException("insert a échoué", throwables);
@@ -76,11 +76,16 @@ public class ArticleDAOJbdcImpl {
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
-        }
+            }
         }
     }
 
-
+    /**
+     * Permet de réaliser un SELECT sur la table Article de la BDD PAPETERI_DB par l'id de l'article
+     * @param idArticle l'id de l'article à rechercher
+     * @return un select de l'article
+     * @throws DALException
+     */
     public Article selectById(int idArticle) throws DALException {
         Article artSelected = null;
         getConnexion();
@@ -88,9 +93,18 @@ public class ArticleDAOJbdcImpl {
             PreparedStatement stmt = conn.prepareStatement(querySelectbyId);
             stmt.setInt(1, idArticle);
             ResultSet rs = stmt.executeQuery();
-            artSelected = new Stylo(rs.getInt("idArticle"), rs.getString("marque"), rs.getString("reference").trim(),
-                    rs.getString("designation"), rs.getFloat("prixUnitaire"), rs.getInt("qteStock"),
-                    rs.getString("couleur"));
+            if (rs.next()) {
+                if ("stylo".equalsIgnoreCase(rs.getString("type").trim())){
+                    artSelected = new Stylo(rs.getInt("idArticle"), rs.getString("marque"), rs.getString("reference").trim(),
+                            rs.getString("designation"), rs.getFloat("prixUnitaire"), rs.getInt("qteStock"),
+                            rs.getString("couleur"));
+                }
+                if ("Ramette".equalsIgnoreCase(rs.getString("type").trim())){
+                    artSelected = new Ramette(rs.getInt("idArticle"), rs.getString("marque"), rs.getString("reference").trim(),
+                            rs.getString("designation"), rs.getFloat("prixUnitaire"), rs.getInt("qteStock"),
+                            rs.getInt("grammage"));
+                }
+            }
         } catch (SQLException throwables) {
             throw new DALException("selectById a échoué", throwables);
         } finally {
@@ -115,11 +129,51 @@ public class ArticleDAOJbdcImpl {
 
 
 
-   /* public List<Article> selectAll() {
+   public List<Article> selectAll() throws DALException {
+        getConnexion();
+        List<Article> liste = new ArrayList<>();
+       try {
+           Article art = null;
+           Statement stmt = conn.createStatement();
+           ResultSet rs = stmt.executeQuery(querySelectAll);
 
-    }
+           while (rs.next()) {
+               if ("stylo".equalsIgnoreCase(rs.getString("type").trim())){
+                    art = new Stylo(rs.getInt("idArticle"), rs.getString("marque"), rs.getString("reference").trim(),
+                            rs.getString("designation"), rs.getFloat("prixUnitaire"), rs.getInt("qteStock"),
+                            rs.getString("couleur"));
+               }
+               if ("Ramette".equalsIgnoreCase(rs.getString("type").trim())){
+                   new Ramette(rs.getInt("idArticle"), rs.getString("marque"), rs.getString("reference").trim(),
+                           rs.getString("designation"), rs.getFloat("prixUnitaire"), rs.getInt("qteStock"),
+                           rs.getInt("grammage"));
+               }
+               liste.add(art);
+           }
+       } catch (SQLException throwables) {
+           throw new DALException("selectAll a échoué", throwables);
+       } finally {
+           if (stmt!= null){
+               try {
+                   stmt.close();
+               } catch (SQLException throwables) {
+                   throwables.printStackTrace();
+               }
+               stmt = null;
+           }
+           if (conn!= null){
+               try {
+                   conn.close();
+               } catch (SQLException throwables) {
+                   throwables.printStackTrace();
+               }
+           }
+       }
 
-    public void update(Article a1) {
+       return liste;
+   }
+
+    /*public void update(Article a1) {
     UPDATE Articles SET idArticle = ?, reference=?, marque=?, designation=?, prixUnitaire=?, qteStock=?, grammage=?, couleur =?
     }
 

@@ -31,7 +31,7 @@ public class AppliTestDAL {
 			System.out.println("Article ajouté  : " + a3.toString() );
 
 
-		/*	//Sélection de l'article par id
+		//Sélection de l'article par id
 			Article a = articleDAO.selectById(a2.getIdArticle());
 			System.out.println("\nSélection de l'article par id  : " + a.toString() );
 
@@ -39,7 +39,7 @@ public class AppliTestDAL {
 			List<Article> articles = articleDAO.selectAll();
 			System.out.println("\nSélection de tous les articles  : "  );
 			afficherArticles(articles);
-
+/*
 			//Modification d'un article
 			System.out.println("\nModification d'un article  : " );
 			System.out.println("Article avant modification : "  + a1.toString());
@@ -62,7 +62,7 @@ public class AppliTestDAL {
 
 
 		} catch (DALException e) {
-
+			e.printStackTrace();
 		}
 
 	}
