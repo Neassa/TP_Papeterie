@@ -18,6 +18,8 @@ public class ArticleDAOJbdcImpl {
     private static final String querySelectbyId = "SELECT idArticle, reference , marque, designation, prixUnitaire, qteStock, grammage, couleur, type from Articles WHERE idArticle = ?";
     private static final String queryInsert = "INSERT INTO Articles (reference, marque, designation, prixUnitaire, qteStock, grammage, couleur, type) VALUES(?, ?, ?, ?, ?, ?, ?, ?) ";
     private static final String querySelectAll = "SELECT * FROM Articles";
+    private static final String queryUpdate = "UPDATE Articles SET  reference=?, marque=?, designation=?, prixUnitaire=?, qteStock=?, grammage=?, couleur =? WHERE idArticle=?";
+    private static final String queryDelete = "DELETE FROM Articles WHERE idArticle=?";
 
     public Connection getConnexion() {
         try {
@@ -53,7 +55,6 @@ public class ArticleDAOJbdcImpl {
             stmt.executeUpdate();
             //récupérer l'id de l'article
            ResultSet rs = stmt.getGeneratedKeys();
-
            if (rs.next()) {
                art.setIdArticle(rs.getInt(1));
            }
@@ -128,7 +129,11 @@ public class ArticleDAOJbdcImpl {
     }
 
 
-
+    /**
+     * Permet de réaliser un SELECT sur la table Article de la BDD PAPETERI_DB
+     * @return une liste contenant tous les articles de la table
+     * @throws DALException
+     */
    public List<Article> selectAll() throws DALException {
         getConnexion();
         List<Article> liste = new ArrayList<>();
@@ -144,7 +149,7 @@ public class ArticleDAOJbdcImpl {
                             rs.getString("couleur"));
                }
                if ("Ramette".equalsIgnoreCase(rs.getString("type").trim())){
-                   new Ramette(rs.getInt("idArticle"), rs.getString("marque"), rs.getString("reference").trim(),
+                   art = new Ramette(rs.getInt("idArticle"), rs.getString("marque"), rs.getString("reference").trim(),
                            rs.getString("designation"), rs.getFloat("prixUnitaire"), rs.getInt("qteStock"),
                            rs.getInt("grammage"));
                }
@@ -173,12 +178,85 @@ public class ArticleDAOJbdcImpl {
        return liste;
    }
 
-    /*public void update(Article a1) {
-    UPDATE Articles SET idArticle = ?, reference=?, marque=?, designation=?, prixUnitaire=?, qteStock=?, grammage=?, couleur =?
+   /**
+    * Permet de réaliser un UPDATE sur la table Article de la BDD PAPETERI_DB
+    */
+    public void update(Article art) throws DALException {
+        getConnexion();
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(queryUpdate);
+            stmt.setString(1, art.getReference());
+            stmt.setString(2, art.getMarque());
+            stmt.setString(3, art.getDesignation());
+            stmt.setFloat(4, art.getPrixUnitaire());
+            stmt.setInt(5, art.getQteStock());
+            stmt.setInt(8, art.getIdArticle());
+
+            if (art instanceof Stylo) {
+                stmt.setObject(7, ((Stylo) art).getCouleur(), Types.NVARCHAR);
+                stmt.setObject(6, null, Types.INTEGER);
+            }
+            if (art instanceof Ramette) {
+                stmt.setObject(6, ((Ramette) art).getGrammage(), Types.INTEGER);
+                stmt.setObject(7, null, Types.INTEGER);
+            }
+            stmt.executeUpdate();
+        } catch (SQLException throwables) {
+            throw new DALException("update a échoué", throwables);
+        } finally {
+            if (stmt!= null){
+                try {
+                    stmt.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+             stmt = null;
+            }
+            if (conn!= null){
+                try {
+                    conn.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        }
     }
 
-    public void delete(Integer idArticle) {
-    }*/
+    /**
+     * Permet de réaliser un DELETE sur la table Article de la BDD PAPETERI_DB
+     * @param idArticle id de l'article à suprimmer
+     * @throws DALException
+     */
+    public void delete(Integer idArticle) throws DALException {
+        getConnexion();
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(queryDelete);
+            stmt.setInt(1, idArticle);
+            stmt.executeUpdate();
+
+        } catch (SQLException throwables) {
+            throw new DALException("delete a échoué", throwables);
+        } finally {
+            if (stmt!= null){
+                try {
+                    stmt.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                stmt = null;
+            }
+            if (conn!= null){
+                try {
+                    conn.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        }
+
+    }
 }
 
 

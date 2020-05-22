@@ -39,7 +39,7 @@ public class AppliTestDAL {
 			List<Article> articles = articleDAO.selectAll();
 			System.out.println("\nSélection de tous les articles  : "  );
 			afficherArticles(articles);
-/*
+
 			//Modification d'un article
 			System.out.println("\nModification d'un article  : " );
 			System.out.println("Article avant modification : "  + a1.toString());
@@ -50,7 +50,7 @@ public class AppliTestDAL {
 			System.out.println("Article après modification  : " + a1.toString() );
 
 
-			//Suppression d'un article
+		///Suppression d'un article
 			System.out.println("\nSuppression de l'article  : " + a1.toString());
 			articleDAO.delete(a1.getIdArticle());
 			articles = articleDAO.selectAll();
@@ -58,7 +58,7 @@ public class AppliTestDAL {
 			afficherArticles(articles);
 			System.out.println("---------------------------------------------------------------");
 
-		 */
+
 
 
 		} catch (DALException e) {
