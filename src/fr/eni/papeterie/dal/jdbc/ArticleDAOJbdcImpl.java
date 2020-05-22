@@ -30,7 +30,39 @@ public class ArticleDAOJbdcImpl {
         return conn;
     }
 
+    /**
+     * Permet de fermer la connexion
+     */
+    public void closeConnexion() {
+        if (conn!= null){
+            try {
+                conn.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
 
+    /**
+     * Permet de fermer le statement ouvert
+     */
+    public void closeStatement() {
+        if (stmt!=null){
+            try {
+                stmt.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            stmt = null;
+        }
+    }
+
+    /**
+     * Permet de réaliser un INSER sur la table Article de la BDD PAPETERI_DB
+     * et récupèrer l'id auto-généré par SQL server et modifier l'instance
+     * @param art les données de l'article à ajouter
+     * @throws DALException
+     */
     public void insert(Article art) throws DALException {
         getConnexion();
 
@@ -63,21 +95,8 @@ public class ArticleDAOJbdcImpl {
         } catch (SQLException throwables) {
             throw new DALException("insert a échoué", throwables);
         } finally {
-            if (stmt!=null){
-                try {
-                    stmt.close();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-                stmt = null;
-            }
-            if (conn!= null){
-                try {
-                    conn.close();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-            }
+            closeStatement();
+            closeConnexion();
         }
     }
 
@@ -109,21 +128,8 @@ public class ArticleDAOJbdcImpl {
         } catch (SQLException throwables) {
             throw new DALException("selectById a échoué", throwables);
         } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-                stmt = null;
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-            }
+            closeStatement();
+            closeConnexion();
         }
         return artSelected;
     }
@@ -158,21 +164,8 @@ public class ArticleDAOJbdcImpl {
        } catch (SQLException throwables) {
            throw new DALException("selectAll a échoué", throwables);
        } finally {
-           if (stmt!= null){
-               try {
-                   stmt.close();
-               } catch (SQLException throwables) {
-                   throwables.printStackTrace();
-               }
-               stmt = null;
-           }
-           if (conn!= null){
-               try {
-                   conn.close();
-               } catch (SQLException throwables) {
-                   throwables.printStackTrace();
-               }
-           }
+           closeStatement();
+           closeConnexion();
        }
 
        return liste;
@@ -205,21 +198,8 @@ public class ArticleDAOJbdcImpl {
         } catch (SQLException throwables) {
             throw new DALException("update a échoué", throwables);
         } finally {
-            if (stmt!= null){
-                try {
-                    stmt.close();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-             stmt = null;
-            }
-            if (conn!= null){
-                try {
-                    conn.close();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-            }
+            closeStatement();
+            closeConnexion();
         }
     }
 
@@ -239,21 +219,8 @@ public class ArticleDAOJbdcImpl {
         } catch (SQLException throwables) {
             throw new DALException("delete a échoué", throwables);
         } finally {
-            if (stmt!= null){
-                try {
-                    stmt.close();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-                stmt = null;
-            }
-            if (conn!= null){
-                try {
-                    conn.close();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-            }
+            closeStatement();
+            closeConnexion();
         }
 
     }
