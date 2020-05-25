@@ -1,6 +1,8 @@
 package fr.eni.papeterie.bo;
 
-public abstract class Article {
+import java.io.Serializable;
+
+public abstract class Article implements Serializable {
     private Integer idArticle;
     private String reference;
     private String marque;
