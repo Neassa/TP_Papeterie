@@ -11,6 +11,7 @@ public class Stylo extends Article{
      * @param designation la désignation de l'article
      * @param pu le prix unitaire de l'article
      * @param qte la quantité de l'article en stock
+     * @param couleur couleur su stylo           
      */
     public Stylo(Integer idArticle, String marque, String ref, String designation, float pu, int qte, String couleur) {
         super(idArticle, marque, ref, designation, pu, qte);
@@ -25,6 +26,20 @@ public class Stylo extends Article{
      */
     public Stylo(String marque, float pu, int qte, String couleur) {
         super(marque, pu, qte);
+        this.couleur = couleur;
+    }
+
+    /**
+     * MAJ constructeur pour test AppliTestDAL - SANS ID
+     * @param marque
+     * @param ref
+     * @param designation
+     * @param pu
+     * @param qte
+     * @param couleur
+     */
+    public Stylo(String marque, String ref, String designation, float pu, int qte, String couleur) {
+        super(null, marque, ref, designation, pu, qte);
         this.couleur = couleur;
     }
 
