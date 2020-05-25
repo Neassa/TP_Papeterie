@@ -222,7 +222,6 @@ public class ArticleDAOJbdcImpl {
             closeStatement();
             closeConnexion();
         }
-
     }
 }
 
