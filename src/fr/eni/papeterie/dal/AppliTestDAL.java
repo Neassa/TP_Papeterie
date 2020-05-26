@@ -3,7 +3,6 @@ package fr.eni.papeterie.dal;
 import fr.eni.papeterie.bo.Article;
 import fr.eni.papeterie.bo.Ramette;
 import fr.eni.papeterie.bo.Stylo;
-import fr.eni.papeterie.dal.jdbc.ArticleDAOJbdcImpl;
 
 import java.util.List;
 
@@ -12,9 +11,7 @@ public class AppliTestDAL {
 	public static void main(String[] args) {
 
 		//Déclaration et instanciation de la DAO
-		//ArticleDAOJbdcImpl articleDAO = new ArticleDAOJbdcImpl();
-		// test partie 3 (mod4)
-		ArticleDAO articleDAO = new ArticleDAOJbdcImpl();
+		ArticleDAO articleDAO = Factory.getArticleDAO();
 
 
 		//Instanciation du jeu d'essai 
