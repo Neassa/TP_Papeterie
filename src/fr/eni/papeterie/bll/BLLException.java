@@ -11,4 +11,9 @@ public class BLLException extends Exception{
     public BLLException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    @Override
+    public String getMessage() {
+        return "BLL" + super.getMessage();
+    }
 }
