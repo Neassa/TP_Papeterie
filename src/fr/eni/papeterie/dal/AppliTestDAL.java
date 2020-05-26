@@ -12,7 +12,10 @@ public class AppliTestDAL {
 	public static void main(String[] args) {
 
 		//Déclaration et instanciation de la DAO
-		ArticleDAOJbdcImpl articleDAO = new ArticleDAOJbdcImpl();
+		//ArticleDAOJbdcImpl articleDAO = new ArticleDAOJbdcImpl();
+		// test partie 3 (mod4)
+		ArticleDAO articleDAO = new ArticleDAOJbdcImpl();
+
 
 		//Instanciation du jeu d'essai 
 		Article a1 = new Stylo( "Bic", "BBOrange","Bic bille Orange", 1.2f, 20, "bleu");

@@ -4,13 +4,14 @@ import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 import fr.eni.papeterie.bo.Article;
 import fr.eni.papeterie.bo.Ramette;
 import fr.eni.papeterie.bo.Stylo;
+import fr.eni.papeterie.dal.ArticleDAO;
 import fr.eni.papeterie.dal.DALException;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArticleDAOJbdcImpl {
+public class ArticleDAOJbdcImpl implements ArticleDAO {
     Statement stmt;
     Connection conn = null;
 
@@ -127,7 +128,7 @@ public class ArticleDAOJbdcImpl {
      */
    public List<Article> selectAll() throws DALException {
         conn = JdbcTools.getConnexion();
-        List<Article> liste = new ArrayList<>();
+        List<Article> articles = new ArrayList<>();
        try {
            Article art = null;
            Statement stmt = conn.createStatement();
@@ -144,7 +145,7 @@ public class ArticleDAOJbdcImpl {
                            rs.getString("designation"), rs.getFloat("prixUnitaire"), rs.getInt("qteStock"),
                            rs.getInt("grammage"));
                }
-               liste.add(art);
+               articles.add(art);
            }
        } catch (SQLException throwables) {
            throw new DALException("selectAll a échoué", throwables);
@@ -153,7 +154,7 @@ public class ArticleDAOJbdcImpl {
            JdbcTools.closeConnexion();
        }
 
-       return liste;
+       return articles;
    }
 
    /**
