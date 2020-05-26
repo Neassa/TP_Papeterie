@@ -14,12 +14,8 @@ public class JdbcTools {
      * Permet d'obtenir une connexion à la BDD
      * @return la connexion
      */
-    public static Connection getConnexion() {
-        try {
+    public static Connection getConnexion() throws SQLException {
             conn = DriverManager.getConnection(Settings.getProperties("url"), Settings.getProperties("user"), Settings.getProperties("password"));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
         return conn;
     }
 

@@ -25,9 +25,6 @@ public class ArticleDAOJbdcImpl implements ArticleDAO {
     private static final String queryUpdate = "UPDATE Articles SET  reference=?, marque=?, designation=?, prixUnitaire=?, qteStock=?, grammage=?, couleur =? WHERE idArticle=?";
     private static final String queryDelete = "DELETE FROM Articles WHERE idArticle=?";
 
-
-
-
     /**
      * Permet de fermer le statement ouvert
      */
@@ -42,7 +39,6 @@ public class ArticleDAOJbdcImpl implements ArticleDAO {
         }
     }
 
-
     //////////////////////////// CRUD ////////////////////////////
 
     /**
@@ -52,9 +48,9 @@ public class ArticleDAOJbdcImpl implements ArticleDAO {
      * @throws DALException
      */
     public void insert(Article art) throws DALException {
-        conn = JdbcTools.getConnexion();
 
         try {
+            conn = JdbcTools.getConnexion();
             PreparedStatement stmt = conn.prepareStatement(queryInsert, Statement.RETURN_GENERATED_KEYS);
             stmt.setObject(1, art.getReference(), Types.NCHAR);
             stmt.setObject(2, art.getMarque(), Types.VARCHAR);
@@ -94,8 +90,9 @@ public class ArticleDAOJbdcImpl implements ArticleDAO {
      */
     public Article selectById(int idArticle) throws DALException {
         Article artSelected = null;
-        conn =JdbcTools.getConnexion();
+
         try {
+            conn =JdbcTools.getConnexion();
             PreparedStatement stmt = conn.prepareStatement(querySelectbyId);
             stmt.setInt(1, idArticle);
             ResultSet rs = stmt.executeQuery();
@@ -127,9 +124,9 @@ public class ArticleDAOJbdcImpl implements ArticleDAO {
      * @throws DALException
      */
    public List<Article> selectAll() throws DALException {
-        conn = JdbcTools.getConnexion();
         List<Article> articles = new ArrayList<>();
        try {
+           conn = JdbcTools.getConnexion();
            Article art = null;
            Statement stmt = conn.createStatement();
            ResultSet rs = stmt.executeQuery(querySelectAll);
@@ -161,9 +158,8 @@ public class ArticleDAOJbdcImpl implements ArticleDAO {
     * Permet de réaliser un UPDATE sur la table Article de la BDD PAPETERI_DB
     */
     public void update(Article art) throws DALException {
-        conn = JdbcTools.getConnexion();
-
         try {
+            conn = JdbcTools.getConnexion();
             PreparedStatement stmt = conn.prepareStatement(queryUpdate);
             stmt.setString(1, art.getReference());
             stmt.setString(2, art.getMarque());
@@ -195,9 +191,8 @@ public class ArticleDAOJbdcImpl implements ArticleDAO {
      * @throws DALException
      */
     public void delete(Integer idArticle) throws DALException {
-        conn = JdbcTools.getConnexion();
-
         try {
+            conn = JdbcTools.getConnexion();
             PreparedStatement stmt = conn.prepareStatement(queryDelete);
             stmt.setInt(1, idArticle);
             stmt.executeUpdate();
