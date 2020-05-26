@@ -11,37 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleDAOJbdcImpl {
-    String url = "jdbc:sqlserver://LAPTOP-N49RLD68:1433;databaseName=PAPETERIE_DB";
-    Connection conn;
     Statement stmt;
+    Connection conn = null;
 
+    private static final String TYPE_STYLO = "Stylo";
+    private static final String TYPE_RAMETTE = "Ramette";
+
+    //Requêtes SQL
     private static final String querySelectbyId = "SELECT idArticle, reference , marque, designation, prixUnitaire, qteStock, grammage, couleur, type from Articles WHERE idArticle = ?";
-    private static final String queryInsert = "INSERT INTO Articles (reference, marque, designation, prixUnitaire, qteStock, grammage, couleur, type) VALUES(?, ?, ?, ?, ?, ?, ?, ?) ";
+    private static final String queryInsert = "INSERT INTO Articles (reference, marque, designation, prixUnitaire, qteStock, grammage, couleur, type) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String querySelectAll = "SELECT * FROM Articles";
     private static final String queryUpdate = "UPDATE Articles SET  reference=?, marque=?, designation=?, prixUnitaire=?, qteStock=?, grammage=?, couleur =? WHERE idArticle=?";
     private static final String queryDelete = "DELETE FROM Articles WHERE idArticle=?";
 
-    public Connection getConnexion() {
-        try {
-            conn = DriverManager.getConnection(url, "sa", "Alistair18");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return conn;
-    }
 
-    /**
-     * Permet de fermer la connexion
-     */
-    public void closeConnexion() {
-        if (conn!= null){
-            try {
-                conn.close();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        }
-    }
+
 
     /**
      * Permet de fermer le statement ouvert
@@ -57,14 +41,17 @@ public class ArticleDAOJbdcImpl {
         }
     }
 
+
+    //////////////////////////// CRUD ////////////////////////////
+
     /**
-     * Permet de réaliser un INSER sur la table Article de la BDD PAPETERI_DB
+     * Permet de réaliser un INSERTe sur la table Article de la BDD PAPETERI_DB
      * et récupèrer l'id auto-généré par SQL server et modifier l'instance
      * @param art les données de l'article à ajouter
      * @throws DALException
      */
     public void insert(Article art) throws DALException {
-        getConnexion();
+        conn = JdbcTools.getConnexion();
 
         try {
             PreparedStatement stmt = conn.prepareStatement(queryInsert, Statement.RETURN_GENERATED_KEYS);
@@ -76,12 +63,12 @@ public class ArticleDAOJbdcImpl {
 
             if (art instanceof Stylo) {
                 stmt.setObject(7, ((Stylo) art).getCouleur(), Types.NVARCHAR);
-                stmt.setObject(6, null, Types.INTEGER);
+                stmt.setNull(6, Types.INTEGER);
                 stmt.setObject(8, art.getClass().getSimpleName(), Types.NCHAR);
             }
             if (art instanceof Ramette) {
                 stmt.setObject(6, ((Ramette) art).getGrammage(), Types.INTEGER);
-                stmt.setObject(7, null, Types.INTEGER);
+                stmt.setNull(7, Types.INTEGER);
                 stmt.setObject(8, art.getClass().getSimpleName(), Types.NCHAR);
             }
             stmt.executeUpdate();
@@ -90,13 +77,11 @@ public class ArticleDAOJbdcImpl {
            if (rs.next()) {
                art.setIdArticle(rs.getInt(1));
            }
-
-
         } catch (SQLException throwables) {
             throw new DALException("insert a échoué", throwables);
         } finally {
             closeStatement();
-            closeConnexion();
+            JdbcTools.closeConnexion();
         }
     }
 
@@ -108,18 +93,18 @@ public class ArticleDAOJbdcImpl {
      */
     public Article selectById(int idArticle) throws DALException {
         Article artSelected = null;
-        getConnexion();
+        conn =JdbcTools.getConnexion();
         try {
             PreparedStatement stmt = conn.prepareStatement(querySelectbyId);
             stmt.setInt(1, idArticle);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                if ("stylo".equalsIgnoreCase(rs.getString("type").trim())){
+                if (TYPE_STYLO.equalsIgnoreCase(rs.getString("type").trim())){
                     artSelected = new Stylo(rs.getInt("idArticle"), rs.getString("marque"), rs.getString("reference").trim(),
                             rs.getString("designation"), rs.getFloat("prixUnitaire"), rs.getInt("qteStock"),
                             rs.getString("couleur"));
                 }
-                if ("Ramette".equalsIgnoreCase(rs.getString("type").trim())){
+                if (TYPE_RAMETTE.equalsIgnoreCase(rs.getString("type").trim())){
                     artSelected = new Ramette(rs.getInt("idArticle"), rs.getString("marque"), rs.getString("reference").trim(),
                             rs.getString("designation"), rs.getFloat("prixUnitaire"), rs.getInt("qteStock"),
                             rs.getInt("grammage"));
@@ -129,7 +114,7 @@ public class ArticleDAOJbdcImpl {
             throw new DALException("selectById a échoué", throwables);
         } finally {
             closeStatement();
-            closeConnexion();
+            JdbcTools.closeConnexion();
         }
         return artSelected;
     }
@@ -141,7 +126,7 @@ public class ArticleDAOJbdcImpl {
      * @throws DALException
      */
    public List<Article> selectAll() throws DALException {
-        getConnexion();
+        conn = JdbcTools.getConnexion();
         List<Article> liste = new ArrayList<>();
        try {
            Article art = null;
@@ -165,7 +150,7 @@ public class ArticleDAOJbdcImpl {
            throw new DALException("selectAll a échoué", throwables);
        } finally {
            closeStatement();
-           closeConnexion();
+           JdbcTools.closeConnexion();
        }
 
        return liste;
@@ -175,7 +160,7 @@ public class ArticleDAOJbdcImpl {
     * Permet de réaliser un UPDATE sur la table Article de la BDD PAPETERI_DB
     */
     public void update(Article art) throws DALException {
-        getConnexion();
+        conn = JdbcTools.getConnexion();
 
         try {
             PreparedStatement stmt = conn.prepareStatement(queryUpdate);
@@ -199,7 +184,7 @@ public class ArticleDAOJbdcImpl {
             throw new DALException("update a échoué", throwables);
         } finally {
             closeStatement();
-            closeConnexion();
+            JdbcTools.closeConnexion();
         }
     }
 
@@ -209,7 +194,7 @@ public class ArticleDAOJbdcImpl {
      * @throws DALException
      */
     public void delete(Integer idArticle) throws DALException {
-        getConnexion();
+        conn = JdbcTools.getConnexion();
 
         try {
             PreparedStatement stmt = conn.prepareStatement(queryDelete);
@@ -220,7 +205,7 @@ public class ArticleDAOJbdcImpl {
             throw new DALException("delete a échoué", throwables);
         } finally {
             closeStatement();
-            closeConnexion();
+            JdbcTools.closeConnexion();
         }
     }
 }
