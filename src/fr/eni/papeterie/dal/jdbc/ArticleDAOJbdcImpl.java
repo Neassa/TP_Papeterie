@@ -1,6 +1,6 @@
 package fr.eni.papeterie.dal.jdbc;
 
-import com.microsoft.sqlserver.jdbc.SQLServerDriver;
+
 import fr.eni.papeterie.bo.Article;
 import fr.eni.papeterie.bo.Ramette;
 import fr.eni.papeterie.bo.Stylo;
@@ -57,6 +57,11 @@ public class ArticleDAOJbdcImpl {
         }
     }
 
+<<<<<<< Updated upstream
+=======
+    //////////////////////////// CRUD ////////////////////////////
+
+>>>>>>> Stashed changes
     /**
      * Permet de réaliser un INSER sur la table Article de la BDD PAPETERI_DB
      * et récupèrer l'id auto-généré par SQL server et modifier l'instance
@@ -64,9 +69,13 @@ public class ArticleDAOJbdcImpl {
      * @throws DALException
      */
     public void insert(Article art) throws DALException {
+<<<<<<< Updated upstream
         getConnexion();
+=======
+>>>>>>> Stashed changes
 
         try {
+            conn = JdbcTools.getConnexion();
             PreparedStatement stmt = conn.prepareStatement(queryInsert, Statement.RETURN_GENERATED_KEYS);
             stmt.setObject(1, art.getReference(), Types.NCHAR);
             stmt.setObject(2, art.getMarque(), Types.VARCHAR);
@@ -108,8 +117,13 @@ public class ArticleDAOJbdcImpl {
      */
     public Article selectById(int idArticle) throws DALException {
         Article artSelected = null;
+<<<<<<< Updated upstream
         getConnexion();
+=======
+
+>>>>>>> Stashed changes
         try {
+            conn =JdbcTools.getConnexion();
             PreparedStatement stmt = conn.prepareStatement(querySelectbyId);
             stmt.setInt(1, idArticle);
             ResultSet rs = stmt.executeQuery();
@@ -141,9 +155,15 @@ public class ArticleDAOJbdcImpl {
      * @throws DALException
      */
    public List<Article> selectAll() throws DALException {
+<<<<<<< Updated upstream
         getConnexion();
         List<Article> liste = new ArrayList<>();
+=======
+
+        List<Article> articles = new ArrayList<>();
+>>>>>>> Stashed changes
        try {
+           conn = JdbcTools.getConnexion();
            Article art = null;
            Statement stmt = conn.createStatement();
            ResultSet rs = stmt.executeQuery(querySelectAll);
@@ -167,17 +187,25 @@ public class ArticleDAOJbdcImpl {
            closeStatement();
            closeConnexion();
        }
+<<<<<<< Updated upstream
 
        return liste;
+=======
+       return articles;
+>>>>>>> Stashed changes
    }
 
    /**
     * Permet de réaliser un UPDATE sur la table Article de la BDD PAPETERI_DB
     */
     public void update(Article art) throws DALException {
+<<<<<<< Updated upstream
         getConnexion();
 
+=======
+>>>>>>> Stashed changes
         try {
+            conn = JdbcTools.getConnexion();
             PreparedStatement stmt = conn.prepareStatement(queryUpdate);
             stmt.setString(1, art.getReference());
             stmt.setString(2, art.getMarque());
@@ -209,13 +237,16 @@ public class ArticleDAOJbdcImpl {
      * @throws DALException
      */
     public void delete(Integer idArticle) throws DALException {
+<<<<<<< Updated upstream
         getConnexion();
 
+=======
+>>>>>>> Stashed changes
         try {
+            conn = JdbcTools.getConnexion();
             PreparedStatement stmt = conn.prepareStatement(queryDelete);
             stmt.setInt(1, idArticle);
             stmt.executeUpdate();
-
         } catch (SQLException throwables) {
             throw new DALException("delete a échoué", throwables);
         } finally {
