@@ -190,7 +190,7 @@ public class ArticleDAOJbdcImpl implements ArticleDAO {
      * @param idArticle id de l'article à suprimmer
      * @throws DALException
      */
-    public void delete(Integer idArticle) throws DALException {
+    public void delete(int idArticle) throws DALException {
         try {
             conn = JdbcTools.getConnexion();
             PreparedStatement stmt = conn.prepareStatement(queryDelete);

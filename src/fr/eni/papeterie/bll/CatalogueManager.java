@@ -37,28 +37,62 @@ public class CatalogueManager {
     }
 
 
-    public void addArticle(Article art) throws BLLException {
-        if(art.getIdArticle()!=null){
+    /**
+     * Permet d'ajouter un article au catalogue
+     * @param a nouvel article
+     * @throws BLLException
+     */
+    public void addArticle(Article a) throws BLLException {
+        if(a.getIdArticle()!=null){
             throw new BLLException("Cet article existe déjà.");
         }
-
         try {
-            validerArticle(art);
-            daoArticles.insert(art);
+            validerArticle(a);
+            daoArticles.insert(a);
         } catch (DALException e) {
             throw new BLLException("Echec de addArticle", e);
         }
     }
 
-    public void updateArticle(int index) {
+    /**
+     * Permet de modifier un article dans le catalogue
+     * @param a article à modifier
+     * @throws BLLException
+     */
+    public void updateArticle(Article a) throws BLLException {
 
+        try {
+            validerArticle(a);
+            daoArticles.update(a);
+        } catch (DALException e) {
+            throw new BLLException("Echec de updateArticle" + a, e);
+        }
 
     }
 
-    public void removeArticle(Article a) {
+    /**
+     * Permet de supprimer un article dans le catalogue
+     * @param a article à supprimer
+     * @throws BLLException
+     */
+    public void removeArticle(Article a) throws BLLException {
+        try {
+            daoArticles.delete(a.getIdArticle());
+        } catch (DALException e) {
+            throw new BLLException("Echec de removeArticle" + a, e);
+        }
 
     }
 
+    /**
+     * Permet de valider ou non un article
+     * Vérifie la présence des attributs
+     * Vérifie que le grammage est positif
+     * Vérifie que le stock est positif
+     * Si un article n'est pas valide, une exception BLLException est levée
+     * @param a article à valider
+     * @throws BLLException
+     */
     public void validerArticle(Article a) throws BLLException {
     boolean valide = true;
 
@@ -84,7 +118,20 @@ public class CatalogueManager {
         }
 
     }
-    public void getArticle(int index) {
 
+    /**
+     * Permet de récupérer un article par son id
+     * @param index id de l'article à récupérer
+     * @return l'article dont l'id est en paramètre
+     * @throws BLLException
+     */
+    public Article getArticle(int index) throws BLLException {
+        Article art = null;
+        try {
+            art = daoArticles.selectById(index);
+        } catch (DALException e) {
+            throw new BLLException("Erreur de récupération de l'article", e);
+        }
+        return art;
     }
 }
