@@ -1,95 +1,118 @@
 package fr.eni.papeterie.ihm;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 
 public class EcranArticle extends JFrame {
-
-
-    //attributs champs
+    //attributs
+    private JPanel panelGrammage, panelType, panelChamps, panelBoutons;
     private JLabel lblRef, lblDesignation, lblMarque, lblStock, lblPrix, lblType, lblGrammage, lblCouleur;
     private JTextField txtRef, txtDeisgnation, txtMarque, txtStock, txtPrix;
+    private JComboBox<String> cboCouleur;
+    private JCheckBox ck80, ck100;
+    private JRadioButton radioRamette, radioStylo;
+    private JButton btnPrevious, btnNew, btnSave, btnDelete, btnNext;
+
+
 
 
     public EcranArticle() throws HeadlessException {
         this.setTitle("Article");
         this.setSize(500, 600);
-
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setVisible(true);
         initIHM();
     }
 
     private void initIHM(){
-        JPanel champs = new JPanel();
-        champs.setLayout(new GridBagLayout());
+        JPanel mainPanel = new JPanel();
+        mainPanel.setBackground(Color.ORANGE);
+       // mainPanel.setLayout(new GridBagLayout());
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        mainPanel.add(getPanelChamps());
+        mainPanel.add(getPanelBoutons());
+
+        //Affecter le panel à l'écran
+        this.setContentPane(mainPanel);
+    }
+
+    //// PANEL CHAMPS////
+
+    public JPanel getPanelChamps(){
+        panelChamps = new JPanel();
+        panelChamps.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
         //Ajouter les compsants au panel champs
         //référence
         gbc.gridy = 0;
         gbc.gridx = 0;
-        champs.add(getLblRef(), gbc);
+        panelChamps.add(getLblRef(), gbc);
 
         gbc.gridx = 1;
-        champs.add(getTxtRef(), gbc);
+        panelChamps.add(getTxtRef(), gbc);
 
         //Désignation
         gbc.gridy = 1;
         gbc.gridx = 0;
-        champs.add(getLblDesignation(), gbc);
+        panelChamps.add(getLblDesignation(), gbc);
 
         gbc.gridx = 1;
-        champs.add(getTxtDeisgnation(), gbc);
+        panelChamps.add(getTxtDeisgnation(), gbc);
 
         //Marque
         gbc.gridy = 2;
         gbc.gridx = 0;
-        champs.add(getLblMarque(), gbc);
+        panelChamps.add(getLblMarque(), gbc);
 
         gbc.gridx = 1;
-        champs.add(getTxtMarque(), gbc);
+        panelChamps.add(getTxtMarque(), gbc);
 
         //Stock
         gbc.gridy = 3;
         gbc.gridx = 0;
-        champs.add(getLblStock(), gbc);
+        panelChamps.add(getLblStock(), gbc);
 
         gbc.gridx = 1;
-        champs.add(getTxtStock(), gbc);
+        panelChamps.add(getTxtStock(), gbc);
 
         //Prix
         gbc.gridy = 4;
         gbc.gridx = 0;
-        champs.add(getLblPrix(), gbc);
+        panelChamps.add(getLblPrix(), gbc);
 
         gbc.gridx = 1;
-        champs.add(getTxtPrix(), gbc);
+        panelChamps.add(getTxtPrix(), gbc);
 
         //Type
         gbc.gridy = 5;
         gbc.gridx = 0;
-        champs.add(getLblType(), gbc);
+        panelChamps.add(getLblType(), gbc);
 
-        //TODO ajouter radius
+        gbc.gridx = 1;
+        panelChamps.add(getPanelType(), gbc);
 
         //Grammage
         gbc.gridy = 6;
         gbc.gridx = 0;
-        champs.add(getLblGrammage(), gbc);
+        panelChamps.add(getLblGrammage(), gbc);
 
-        //TODO ajouter checkbox
+        gbc.gridx = 1;
+        panelChamps.add(getPanelGrammage(), gbc);
 
         //Couleur
         gbc.gridy = 7;
         gbc.gridx = 0;
-        champs.add(getLblCouleur(), gbc);
+        panelChamps.add(getLblCouleur(), gbc);
 
-        //TODO ajouter liste
+        gbc.gridx = 1;
+        panelChamps.add(getCboCouleur(), gbc);
 
-        //Affecter le panel à l'écran
-        this.setContentPane(champs);
+        return panelChamps;
     }
-
 
     public JLabel getLblRef() {
         if (lblRef==null){
@@ -184,5 +207,121 @@ public class EcranArticle extends JFrame {
         return lblCouleur;
     }
 
-}
+    private JComboBox<String> getCboCouleur() {
+        if (cboCouleur==null){
+            String[] couleurs = {"bleu", "indigo","jaune", "noir", "orange", "rouge", "vert", "violet"};
+            cboCouleur = new JComboBox<String>(couleurs);
+            cboCouleur.setSelectedIndex(3);
+        }
+        return cboCouleur;
+    }
 
+    //// PANEL GRAMMAGE////
+
+    public JPanel getPanelGrammage() {
+        if (panelGrammage==null){
+            panelGrammage = new JPanel();
+            panelGrammage.setLayout(new BoxLayout(panelGrammage, BoxLayout.Y_AXIS));
+            panelGrammage.add(getCk80());
+            panelGrammage.add(getCk100());
+        }
+        return panelGrammage;
+    }
+    public JCheckBox getCk80() {
+        if (ck80==null){
+            ck80 = new JCheckBox("80 grammes");
+        }
+        return ck80;
+    }
+
+    public JCheckBox getCk100() {
+        if (ck100==null){
+            ck100 = new JCheckBox("100 grammes");
+        }
+        return ck100;
+    }
+
+
+    //// PANEL TYPE////
+
+    public JPanel getPanelType() {
+        panelType = new JPanel();
+        panelType.setLayout(new BoxLayout(panelType, BoxLayout.Y_AXIS));
+        panelType.add(getRadioRamette());
+        panelType.add(getRadioStylo());
+        return panelType;
+    }
+
+    public JRadioButton getRadioRamette() {
+        if (radioRamette==null){
+            radioRamette = new JRadioButton("Ramette");
+        }
+        return radioRamette;
+    }
+
+    public JRadioButton getRadioStylo() {
+        if (radioStylo==null){
+            radioStylo = new JRadioButton("Stylo");
+        }
+        return radioStylo;
+    }
+
+    ////// PANEL BOUTONS //////
+    public JPanel getPanelBoutons() {
+            if (panelBoutons == null){
+                panelBoutons = new JPanel();
+                panelBoutons.setLayout(new FlowLayout());
+                panelBoutons.add(getBtnPrevious());
+                panelBoutons.add(getBtnNew());
+                panelBoutons.add(getBtnSave());
+                panelBoutons.add(getBtnDelete());
+                panelBoutons.add(getBtnNext());
+            }
+        return panelBoutons;
+    }
+
+    public JButton getBtnPrevious() {
+        if (btnPrevious==null){
+            btnPrevious = new JButton();
+            ImageIcon icon = new ImageIcon(getClass().getResource("ressources/Back24.gif"));
+            btnPrevious.setIcon(icon);
+        }
+        return btnPrevious;
+    }
+
+    public JButton getBtnNew() {
+        if (btnNew==null){
+            btnNew = new JButton();
+            ImageIcon icon = new ImageIcon(getClass().getResource("ressources/New24.gif"));
+            btnNew.setIcon(icon);
+        }
+        return btnNew;
+    }
+
+    public JButton getBtnSave() {
+        if (btnSave==null){
+            btnSave = new JButton();
+            ImageIcon icon = new ImageIcon(getClass().getResource("ressources/Save24.gif"));
+            btnSave.setIcon(icon);
+        }
+        return btnSave;
+    }
+
+    public JButton getBtnDelete() {
+        if (btnDelete==null){
+            btnDelete = new JButton();
+            ImageIcon icon = new ImageIcon(getClass().getResource("ressources/Delete24.gif"));
+            btnDelete.setIcon(icon);
+        }
+        return btnDelete;
+    }
+
+    public JButton getBtnNext() {
+        if (btnNext==null){
+            btnNext = new JButton();
+            ImageIcon icon = new ImageIcon(getClass().getResource("ressources/Forward24.gif"));
+            btnNext.setIcon(icon);
+        }
+        return btnNext;
+    }
+}
