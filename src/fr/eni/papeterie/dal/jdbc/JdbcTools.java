@@ -9,15 +9,25 @@ import java.sql.SQLException;
 public class JdbcTools {
     private static Connection conn;
 
+    private static String urldb;
+    private static String userdb;
+    private static String passworddb;
+
+    static {
+        urldb = Settings.getProperties("url");
+        userdb = Settings.getProperties("user");
+        passworddb = Settings.getProperties("password");
+    }
 
     /**
      * Permet d'obtenir une connexion à la BDD
      * @return la connexion
      */
     public static Connection getConnexion() throws SQLException {
-            conn = DriverManager.getConnection(Settings.getProperties("url"), Settings.getProperties("user"), Settings.getProperties("password"));
+            conn = DriverManager.getConnection(urldb,userdb, passworddb);
         return conn;
     }
+
 
     /**
      * Permet de fermer la connexion

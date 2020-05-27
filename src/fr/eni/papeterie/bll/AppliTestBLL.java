@@ -58,5 +58,4 @@ public class AppliTestBLL {
 			e.printStackTrace();
 		}
 	}
-
 }
