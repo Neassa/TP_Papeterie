@@ -11,7 +11,7 @@ public class AppliTestDAL {
 	public static void main(String[] args) {
 
 		//Déclaration et instanciation de la DAO
-		ArticleDAO articleDAO = Factory.getArticleDAO();
+		ArticleDAO articleDAO = DAOFactory.getArticleDAO();
 
 
 		//Instanciation du jeu d'essai 
