@@ -53,6 +53,7 @@ public class GestionArticle {
             indexCatalogue = 0;
             ecranArt.afficherArticle(catalogue.get(indexCatalogue));
         } else {
+            indexCatalogue = -1;
             ecranArt.afficherNouveau();
         }
     }
@@ -102,7 +103,6 @@ public class GestionArticle {
         try {
             cm.removeArticle(catalogue.get(indexCatalogue));
             catalogue.remove(indexCatalogue);
-            System.out.println("suppression : " + catalogue.get(indexCatalogue));
             ecranArt.popupValidation("Suppression effectuée");
         } catch (BLLException e) {
             ecranArt.popupErreur("Suppression impossible");
