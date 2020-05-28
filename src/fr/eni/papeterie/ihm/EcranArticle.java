@@ -1,31 +1,40 @@
 package fr.eni.papeterie.ihm;
 
+import com.sun.deploy.security.WIExplorerBrowserAuthenticator14;
+import fr.eni.papeterie.bo.Article;
+import fr.eni.papeterie.bo.Ramette;
+import fr.eni.papeterie.bo.Stylo;
+
 import javax.imageio.ImageIO;
+import javax.lang.model.util.ElementScanner7;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 public class EcranArticle extends JFrame {
     //attributs
     private JPanel panelGrammage, panelType, panelChamps, panelBoutons;
     private JLabel lblRef, lblDesignation, lblMarque, lblStock, lblPrix, lblType, lblGrammage, lblCouleur;
-    private JTextField txtRef, txtDeisgnation, txtMarque, txtStock, txtPrix;
+    private JTextField txtRef, txtDesignation, txtMarque, txtStock, txtPrix;
     private JComboBox<String> cboCouleur;
     private JCheckBox ck80, ck100;
-    private ButtonGroup bgType;
+    private ButtonGroup bgType, bgGrammage;
     private JRadioButton radioRamette, radioStylo;
     private JButton btnPrevious, btnNew, btnSave, btnDelete, btnNext;
+    private JOptionPane jopErreur, jopValidation;
 
-
+    private Integer idActif;
 
 
     public EcranArticle() throws HeadlessException {
-        this.setTitle("Article");
+        this.setTitle("Gestionnaire d'article");
         this.setSize(500, 400);
+        this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setVisible(true);
         initIHM();
     }
 
@@ -136,10 +145,10 @@ public class EcranArticle extends JFrame {
     }
 
     public JTextField getTxtDeisgnation() {
-        if (txtDeisgnation == null){
-            txtDeisgnation = new JTextField(30);
+        if (txtDesignation == null){
+            txtDesignation = new JTextField(30);
         }
-        return txtDeisgnation;
+        return txtDesignation;
     }
 
     public JLabel getLblMarque() {
@@ -220,6 +229,9 @@ public class EcranArticle extends JFrame {
         if (panelGrammage==null){
             panelGrammage = new JPanel();
             panelGrammage.setLayout(new BoxLayout(panelGrammage, BoxLayout.Y_AXIS));
+            bgGrammage = new ButtonGroup();
+            bgGrammage.add(getCk80());
+            bgGrammage.add(getCk100());
             panelGrammage.add(getCk80());
             panelGrammage.add(getCk100());
         }
@@ -256,15 +268,26 @@ public class EcranArticle extends JFrame {
     public JRadioButton getRadioRamette() {
         if (radioRamette==null){
             radioRamette = new JRadioButton("Ramette");
-            radioRamette.setSelected(true);
+
             //TODO état initial
             radioRamette.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     ck80.setEnabled(true);
                     ck100.setEnabled(true);
-                    cboCouleur.setEnabled(false);
-                    lblCouleur.setForeground(Color.GRAY);
+                }
+            });
+
+            radioRamette.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    if (e.getStateChange()==ItemEvent.SELECTED){
+                        ck80.setEnabled(true);
+                        ck100.setEnabled(true);
+                        cboCouleur.setEnabled(false);
+                        lblCouleur.setForeground(Color.GRAY);
+                        lblGrammage.setForeground(Color.BLACK);
+                    }
                 }
             });
         }
@@ -277,10 +300,18 @@ public class EcranArticle extends JFrame {
             radioStylo.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                }
+            });
+            radioStylo.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
                     lblGrammage.setForeground(Color.GRAY);
+                    lblCouleur.setForeground(Color.BLACK);
                     cboCouleur.setEnabled(true);
+                    bgGrammage.clearSelection();
                     ck80.setEnabled(false);
                     ck100.setEnabled(false);
+
                 }
             });
         }
@@ -310,13 +341,39 @@ public class EcranArticle extends JFrame {
             btnPrevious.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("appel de previous");
+                    System.out.println("click on previous");
                     GestionArticle.getInstance().previous();
-
+                    //désactive sélection du type
+                    panelType.setEnabled(false);
+                    radioRamette.setEnabled(false);
+                    radioStylo.setEnabled(false);
+                    panelType.setForeground(Color.GRAY);
+                    lblType.setForeground(Color.GRAY);
                 }
             });
         }
         return btnPrevious;
+    }
+
+    public JButton getBtnNext() {
+        if (btnNext==null){
+            btnNext = new JButton();
+            ImageIcon icon = new ImageIcon(getClass().getResource("ressources/Forward24.gif"));
+            btnNext.setIcon(icon);
+
+            btnNext.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("click on next");
+                    GestionArticle.getInstance().next();
+                    //désactive sélection du type
+                    panelType.setEnabled(false);
+                    panelType.setForeground(Color.GRAY);
+                    lblType.setForeground(Color.GRAY);
+                }
+            });
+        }
+        return btnNext;
     }
 
     public JButton getBtnNew() {
@@ -324,6 +381,13 @@ public class EcranArticle extends JFrame {
             btnNew = new JButton();
             ImageIcon icon = new ImageIcon(getClass().getResource("ressources/New24.gif"));
             btnNew.setIcon(icon);
+
+        btnNew.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GestionArticle.getInstance().newArt();
+            }
+        });
         }
         return btnNew;
     }
@@ -333,6 +397,15 @@ public class EcranArticle extends JFrame {
             btnSave = new JButton();
             ImageIcon icon = new ImageIcon(getClass().getResource("ressources/Save24.gif"));
             btnSave.setIcon(icon);
+
+            btnSave.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("click on save");
+                    System.out.println(idActif);
+                    GestionArticle.getInstance().save();
+                }
+            });
         }
         return btnSave;
     }
@@ -342,16 +415,78 @@ public class EcranArticle extends JFrame {
             btnDelete = new JButton();
             ImageIcon icon = new ImageIcon(getClass().getResource("ressources/Delete24.gif"));
             btnDelete.setIcon(icon);
+
+            btnDelete.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("click on delete");
+                    GestionArticle.getInstance().delete();
+                }
+            });
         }
         return btnDelete;
     }
 
-    public JButton getBtnNext() {
-        if (btnNext==null){
-            btnNext = new JButton();
-            ImageIcon icon = new ImageIcon(getClass().getResource("ressources/Forward24.gif"));
-            btnNext.setIcon(icon);
+    public Article getArticle(){
+        Article article = null;
+        if (getRadioRamette().isSelected()){
+            article = new Ramette();
+            ((Ramette)article).setGrammage(getCk80().isSelected()?80:100);
+
+        } else if (getRadioStylo().isSelected()){
+            article = new Stylo();
+            ((Stylo) article).setCouleur((String) getCboCouleur().getSelectedItem());
         }
-        return btnNext;
+        article.setIdArticle(idActif);
+        article.setReference( getTxtRef().getText());
+        article.setMarque(getTxtMarque().getText());
+        article.setDesignation( getTxtDeisgnation().getText());
+        article.setPrixUnitaire(Float.parseFloat(getTxtPrix().getText()));
+        article.setQteStock(Integer.parseInt(getTxtStock().getText()));
+        return article;
+    }
+
+//////// AFFICHAGE ////////
+
+    public void afficherNouveau(){
+        Ramette art = new Ramette(null, "reference", "marque",
+                "désignation", 1, 1, 80);
+        afficherArticle(art);
+        //FIXME améliorer la sélection par défaut
+        radioRamette.setSelected(true);
+    }
+
+    public void afficherArticle(Article art){
+
+        idActif = art.getIdArticle();
+        System.out.println(idActif);
+        getTxtRef().setText(art.getReference());
+        getTxtDeisgnation().setText(art.getDesignation());
+        getTxtMarque().setText(art.getMarque());
+        getTxtStock().setText(String.valueOf(art.getQteStock()));
+        getTxtPrix().setText(String.valueOf(art.getPrixUnitaire()));
+        if (art instanceof Ramette){
+            radioRamette.setSelected(true);
+            if (((Ramette) art).getGrammage() == 80){
+                ck80.setSelected(true);
+            } else if(((Ramette) art).getGrammage() == 100)
+                ck100.setSelected(true);
+        }
+        if (art instanceof Stylo){
+            radioStylo.setSelected(true);
+            //sélectionne la couleur
+            getCboCouleur().setSelectedItem(((Stylo) art).getCouleur());
+        }
+    }
+
+    public void popupErreur(String message){
+        jopErreur = new JOptionPane();
+        jopErreur.showMessageDialog(this, message, "Erreur", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void popupValidation(String message){
+        jopValidation = new JOptionPane();
+        jopValidation.showMessageDialog(this, message, "Validation", JOptionPane.INFORMATION_MESSAGE);
+
     }
 }

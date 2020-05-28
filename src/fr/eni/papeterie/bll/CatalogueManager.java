@@ -96,7 +96,7 @@ public class CatalogueManager {
     boolean valide = true;
 
         //vérifie la présence des attributs
-        if (a.getReference()==null || a.getMarque()==null ||
+        if (a.getReference()==null || a.getReference().trim().length()==0 || a.getMarque()==null ||
         a.getDesignation()==null) {
             valide = false;
         }

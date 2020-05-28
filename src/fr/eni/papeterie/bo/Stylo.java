@@ -43,6 +43,10 @@ public class Stylo extends Article{
         this.couleur = couleur;
     }
 
+    public Stylo() {
+
+    }
+
     @Override
     public String toString() {
         return  super.toString() + " Stylo [" +

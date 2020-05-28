@@ -10,8 +10,7 @@ public class PapeterieApp {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                EcranArticle frame = new EcranArticle();
-                frame.setVisible(true);
+                GestionArticle.getInstance().run();
             }
         });
     }
