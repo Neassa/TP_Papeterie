@@ -363,9 +363,9 @@ public class EcranArticle extends JFrame {
                     System.out.println("click on next");
                     GestionArticle.getInstance().next();
                     //désactive sélection du type
-                    panelType.setEnabled(false);
-                    panelType.setForeground(Color.GRAY);
-                    lblType.setForeground(Color.GRAY);
+                    panelType.setEnabled(true);
+                    panelType.setForeground(Color.BLACK);
+                    lblType.setForeground(Color.BLACK);
                 }
             });
         }
@@ -490,6 +490,5 @@ public class EcranArticle extends JFrame {
     public void popupValidation(String message){
         jopValidation = new JOptionPane();
         jopValidation.showMessageDialog(this, message, "Validation", JOptionPane.INFORMATION_MESSAGE);
-
     }
 }

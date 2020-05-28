@@ -1,6 +1,5 @@
 package fr.eni.papeterie.ihm;
 
-import com.sun.javafx.geom.Vec4d;
 import fr.eni.papeterie.bll.BLLException;
 import fr.eni.papeterie.bll.CatalogueManager;
 import fr.eni.papeterie.bo.Article;
@@ -98,7 +97,6 @@ public class GestionArticle {
             ecranArt.popupErreur("Enregistrement impossible");
         }
     }
-
 
     public void delete(){
         try {
