@@ -1,14 +1,10 @@
 package fr.eni.papeterie.ihm;
 
-import com.sun.deploy.security.WIExplorerBrowserAuthenticator14;
+
 import fr.eni.papeterie.bo.Article;
 import fr.eni.papeterie.bo.Ramette;
 import fr.eni.papeterie.bo.Stylo;
-
-import javax.imageio.ImageIO;
-import javax.lang.model.util.ElementScanner7;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -386,6 +382,8 @@ public class EcranArticle extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GestionArticle.getInstance().newArt();
+                panelType.setEnabled(true);
+                panelType.setForeground(Color.BLACK);
             }
         });
         }
@@ -402,7 +400,12 @@ public class EcranArticle extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("click on save");
-                    System.out.println(idActif);
+                    if (getTxtStock().getText().equals("")){
+                        popupErreur("Entrez un stock, svp !");
+                    }
+                    if (getTxtPrix().getText().equals("")) {
+                        popupErreur("Entrez un prix, svp !");
+                    }
                     GestionArticle.getInstance().save();
                 }
             });
@@ -442,7 +445,7 @@ public class EcranArticle extends JFrame {
         article.setMarque(getTxtMarque().getText());
         article.setDesignation( getTxtDeisgnation().getText());
         article.setPrixUnitaire(Float.parseFloat(getTxtPrix().getText()));
-        article.setQteStock(Integer.parseInt(getTxtStock().getText()));
+        article.setQteStock(Integer.parseInt(getTxtStock().getText().trim()));
         return article;
     }
 

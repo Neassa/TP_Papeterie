@@ -11,7 +11,7 @@ public class GestionArticle {
     //artibut
     private List<Article> catalogue;
     private CatalogueManager cm;
-    private int indexCatalogue = 0;
+    private int indexCatalogue;
     private EcranArticle ecranArt;
 
     private static GestionArticle instance;
@@ -51,6 +51,7 @@ public class GestionArticle {
 
         //affichage à l'ouverture de l'app
         if (catalogue.size() > 0){
+            indexCatalogue = 0;
             ecranArt.afficherArticle(catalogue.get(indexCatalogue));
         } else {
             ecranArt.afficherNouveau();
@@ -89,6 +90,7 @@ public class GestionArticle {
             } else {
                 cm.updateArticle(artSelect);
                 System.out.println("mise à jour : " + artSelect);
+                catalogue.set(indexCatalogue, artSelect);//maj catalogue suite à l'update
                 ecranArt.popupValidation("Mise à jour effectuée");
             }
         } catch (BLLException e) {
