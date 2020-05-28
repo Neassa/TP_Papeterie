@@ -306,6 +306,15 @@ public class EcranArticle extends JFrame {
             btnPrevious = new JButton();
             ImageIcon icon = new ImageIcon(getClass().getResource("ressources/Back24.gif"));
             btnPrevious.setIcon(icon);
+
+            btnPrevious.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("appel de previous");
+                    GestionArticle.getInstance().previous();
+
+                }
+            });
         }
         return btnPrevious;
     }
