@@ -2,7 +2,10 @@ package fr.eni.papeterie.ihm;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class EcranArticle extends JFrame {
     //attributs
@@ -11,6 +14,7 @@ public class EcranArticle extends JFrame {
     private JTextField txtRef, txtDeisgnation, txtMarque, txtStock, txtPrix;
     private JComboBox<String> cboCouleur;
     private JCheckBox ck80, ck100;
+    private ButtonGroup bgType;
     private JRadioButton radioRamette, radioStylo;
     private JButton btnPrevious, btnNew, btnSave, btnDelete, btnNext;
 
@@ -19,7 +23,7 @@ public class EcranArticle extends JFrame {
 
     public EcranArticle() throws HeadlessException {
         this.setTitle("Article");
-        this.setSize(500, 600);
+        this.setSize(500, 400);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
         initIHM();
@@ -27,13 +31,9 @@ public class EcranArticle extends JFrame {
 
     private void initIHM(){
         JPanel mainPanel = new JPanel();
-        mainPanel.setBackground(Color.ORANGE);
-       // mainPanel.setLayout(new GridBagLayout());
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        mainPanel.add(getPanelChamps());
-        mainPanel.add(getPanelBoutons());
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.add(getPanelChamps(), BorderLayout.NORTH);
+        mainPanel.add(getPanelBoutons(), BorderLayout.SOUTH);
 
         //Affecter le panel à l'écran
         this.setContentPane(mainPanel);
@@ -191,8 +191,6 @@ public class EcranArticle extends JFrame {
         return lblType;
     }
 
-
-
     private JLabel getLblGrammage() {
         if (lblGrammage==null){
             lblGrammage = new JLabel("Grammage");
@@ -247,6 +245,9 @@ public class EcranArticle extends JFrame {
     public JPanel getPanelType() {
         panelType = new JPanel();
         panelType.setLayout(new BoxLayout(panelType, BoxLayout.Y_AXIS));
+        bgType = new ButtonGroup();
+        bgType.add((getRadioRamette()));
+        bgType.add(getRadioStylo());
         panelType.add(getRadioRamette());
         panelType.add(getRadioStylo());
         return panelType;
@@ -255,6 +256,17 @@ public class EcranArticle extends JFrame {
     public JRadioButton getRadioRamette() {
         if (radioRamette==null){
             radioRamette = new JRadioButton("Ramette");
+            radioRamette.setSelected(true);
+            //TODO état initial
+            radioRamette.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    ck80.setEnabled(true);
+                    ck100.setEnabled(true);
+                    cboCouleur.setEnabled(false);
+                    lblCouleur.setForeground(Color.GRAY);
+                }
+            });
         }
         return radioRamette;
     }
@@ -262,6 +274,15 @@ public class EcranArticle extends JFrame {
     public JRadioButton getRadioStylo() {
         if (radioStylo==null){
             radioStylo = new JRadioButton("Stylo");
+            radioStylo.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    lblGrammage.setForeground(Color.GRAY);
+                    cboCouleur.setEnabled(true);
+                    ck80.setEnabled(false);
+                    ck100.setEnabled(false);
+                }
+            });
         }
         return radioStylo;
     }

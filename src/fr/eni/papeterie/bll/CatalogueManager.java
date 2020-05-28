@@ -81,7 +81,6 @@ public class CatalogueManager {
         } catch (DALException e) {
             throw new BLLException("Echec de removeArticle" + a, e);
         }
-
     }
 
     /**
