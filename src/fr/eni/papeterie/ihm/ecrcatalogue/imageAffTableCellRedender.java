@@ -1,4 +1,7 @@
 package fr.eni.papeterie.ihm.ecrcatalogue;
 
-public class imageAffTableCellRedender {
+import javax.swing.table.DefaultTableCellRenderer;
+
+public class imageAffTableCellRedender extends DefaultTableCellRenderer {
+
 }
