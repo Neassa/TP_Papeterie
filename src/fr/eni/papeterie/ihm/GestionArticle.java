@@ -53,7 +53,6 @@ public class GestionArticle {
             indexCatalogue = 0;
             ecranArt.afficherArticle(catalogue.get(indexCatalogue));
         } else {
-            indexCatalogue = -1;
             ecranArt.afficherNouveau();
         }
     }
